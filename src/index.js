@@ -1,5 +1,5 @@
 import React from 'react';
-import ReactDOM from 'react-dom/client';
+import ReactDOM from 'react-dom';
 import { Rater } from './components/Rater';
 import { BrowserRouter as Router } from 'react-router-dom'
 import './index.css';
