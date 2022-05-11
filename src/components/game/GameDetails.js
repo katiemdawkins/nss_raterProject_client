@@ -3,8 +3,8 @@ import { useParams } from "react-router"
 import { getCategories, getGameById } from "./GameManager"
 
 export const GameDetails = () => {
-    const [currentGame, setGame] = useState({})
-    //const [categories, setCats] = useState([])
+    //have to have this category array here so that i can map over it later
+    const [currentGame, setGame] = useState({categories:[]})
     const { gameId } = useParams()
 
     useEffect(()=>{
@@ -12,10 +12,6 @@ export const GameDetails = () => {
         .then(data=>setGame(data))
     },[])
 
-    // useEffect(()=>{
-    //     getCategories()
-    //     .then(data=>setCats(data))
-    // },[])
 
 
     return(
@@ -29,9 +25,7 @@ export const GameDetails = () => {
                 <li>Number of Players: {currentGame.num_of_players}</li>
                 <li>Estimated time in play in minutes: {currentGame.est_time_to_play_minutes}</li>
                 <li>Age Recommendation: {currentGame.age_rec}+</li>
-                <li>Categories:{
-                    currentGame?.categories.map((currentGame.category) => {{currentGame.category.label}})
-                    } </li>
+                <li>Categories: {currentGame.categories.map(category => <p>-{category.label}</p>)}</li>
                     
                 </ul>
             </section>
