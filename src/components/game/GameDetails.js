@@ -1,13 +1,18 @@
 import React, { useEffect, useState } from "react"
 import { useParams, useHistory } from "react-router"
-import { getCategories, getGameById, getReviews } from "./GameManager"
+import { createRating, getCategories, getGameById, getReviews } from "./GameManager"
 
 export const GameDetails = () => {
     //have to have this category array here so that i can map over it later
-    const [currentGame, setGame] = useState({categories:[], reviews:[]})
-    //const [reviews, setReviews] = useState([])
-
     const { gameId } = useParams()
+
+    const [gameRating, setRating] = useState({
+        game: gameId,
+        gamer: 0,
+        rating: 0
+    })
+    const [currentGame, setGame] = useState({categories:[], reviews:[], average_rating:0})
+
     const history = useHistory()
 
     useEffect(()=>{
@@ -15,15 +20,12 @@ export const GameDetails = () => {
         .then(data=>setGame(data))
     },[])
 
-    // useEffect(()=>{
-    //     getReviews()
-    //     .then(data => setReviews(data))
-    // }, [])
-
-    // const canEdit = () => {
-    //     if (currentGame.gamer === localStorage.getItem("token")){
-    //     return <button onClick={()=> history.push(`/games/${currentGame.id}/edit`)}>Edit Game</button>
-    // }}
+    const changeRatingState = (evt) => {
+        const newRating = Object.assign({}, gameRating)
+        newRating[evt.target.name] = evt.target.value
+        setRating(newRating)
+    }
+    
 
     return(
         <>
@@ -49,6 +51,35 @@ export const GameDetails = () => {
                 <button onClick={()=> history.push(`/games/${currentGame.id}/edit`)}>Edit Game</button>
             </section>
             <section>
+                <h3>Rate This Game</h3>
+                <form>
+                    <fieldset>
+                    <div className="form-group">
+                        <label htmlFor="rating">1 = AWFUL... 10 = Best Game Ever! </label>
+                        <input id ="rating" type="number" min="1" max="10" name="rating" required autoFocus className="form-control"
+                            value={gameRating.rating}
+                            onChange={changeRatingState}
+                        />
+                    </div>
+                    <button type="submit"
+                        onClick={evt=>{
+                            
+                            const gameRatingObj = {
+                                game: parseInt(gameRating.game),
+                                gamer: parseInt(localStorage.getItem("token")),
+                                rating: parseInt(gameRating.rating)
+                            }
+
+                            createRating(gameRatingObj)
+                            .then(()=>history.push(`/games/${gameId}`))
+                        }}>Submit Your Rating</button>
+                </fieldset>
+            </form>
+            </section>
+            <section>
+                <h3>Average Rating: {currentGame.average_rating}</h3>  
+            </section>
+            <section>
                 <h3>Reviews</h3>
                     {currentGame?.reviews.map(review => <p>{review.content}</p>)}
             </section>
@@ -56,3 +87,7 @@ export const GameDetails = () => {
     )
 }
 
+// const canEdit = () => {
+    //     if (currentGame.gamer === localStorage.getItem("token")){
+    //     return <button onClick={()=> history.push(`/games/${currentGame.id}/edit`)}>Edit Game</button>
+    // }}
