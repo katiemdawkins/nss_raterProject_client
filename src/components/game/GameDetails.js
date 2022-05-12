@@ -41,12 +41,6 @@ export const GameDetails = () => {
                     <li>Age Recommendation: {currentGame.age_rec}+</li>
                     <li>Categories: {currentGame.categories.map(category => <p>-{category.label}</p>)}</li>  
                 </ul>
-                {
-                    currentGame.gamer === localStorage.getItem("token") ?
-                    <button onClick={()=> history.push(`/games/${currentGame.id}/edit`)}>Edit Game</button>
-                    :
-                    ""
-                }
                 <button onClick={()=> history.push(`/games/${currentGame.id}/review`)}>Review Game</button>
                 <button onClick={()=> history.push(`/games/${currentGame.id}/edit`)}>Edit Game</button>
             </section>
@@ -63,7 +57,7 @@ export const GameDetails = () => {
                     </div>
                     <button type="submit"
                         onClick={evt=>{
-                            
+                            evt.preventDefault()
                             const gameRatingObj = {
                                 game: parseInt(gameRating.game),
                                 gamer: parseInt(localStorage.getItem("token")),
@@ -77,17 +71,9 @@ export const GameDetails = () => {
             </form>
             </section>
             <section>
-                <h3>Average Rating: {currentGame.average_rating}</h3>  
-            </section>
-            <section>
                 <h3>Reviews</h3>
                     {currentGame?.reviews.map(review => <p>{review.content}</p>)}
             </section>
         </>
     )
 }
-
-// const canEdit = () => {
-    //     if (currentGame.gamer === localStorage.getItem("token")){
-    //     return <button onClick={()=> history.push(`/games/${currentGame.id}/edit`)}>Edit Game</button>
-    // }}
