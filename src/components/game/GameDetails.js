@@ -20,7 +20,10 @@ export const GameDetails = () => {
     //     .then(data => setReviews(data))
     // }, [])
 
-
+    // const canEdit = () => {
+    //     if (currentGame.gamer === localStorage.getItem("token")){
+    //     return <button onClick={()=> history.push(`/games/${currentGame.id}/edit`)}>Edit Game</button>
+    // }}
 
     return(
         <>
@@ -28,14 +31,22 @@ export const GameDetails = () => {
             <section>
                 <h3>{currentGame.title}</h3>
                 <ul>
-                    <li>Made By {currentGame.maker}</li>
-                    <li>Released in {currentGame.year_released}</li>
+                    <li>Description: {currentGame.description}</li>
+                    <li>Made By: {currentGame.maker}</li>
+                    <li>Released in: {currentGame.year_released}</li>
                     <li>Number of Players: {currentGame.num_of_players}</li>
                     <li>Estimated time in play in minutes: {currentGame.est_time_to_play_minutes}</li>
                     <li>Age Recommendation: {currentGame.age_rec}+</li>
                     <li>Categories: {currentGame.categories.map(category => <p>-{category.label}</p>)}</li>  
                 </ul>
+                {
+                    currentGame.gamer === localStorage.getItem("token") ?
+                    <button onClick={()=> history.push(`/games/${currentGame.id}/edit`)}>Edit Game</button>
+                    :
+                    ""
+                }
                 <button onClick={()=> history.push(`/games/${currentGame.id}/review`)}>Review Game</button>
+                <button onClick={()=> history.push(`/games/${currentGame.id}/edit`)}>Edit Game</button>
             </section>
             <section>
                 <h3>Reviews</h3>
@@ -45,6 +56,3 @@ export const GameDetails = () => {
     )
 }
 
-// {
-//     reviews.map(review => <p>{review.content}</p>)
-// }
